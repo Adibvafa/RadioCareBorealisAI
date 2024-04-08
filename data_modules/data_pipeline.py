@@ -2,6 +2,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+
+# To do: Change the path based on your directory where data is stored
+
 # Loaded all the csv files
 radiograph_data = pd.read_csv("data/cxr-record-list.csv")
 radio_report_data = pd.read_csv("data/cxr-study-list.csv")

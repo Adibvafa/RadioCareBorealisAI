@@ -13,6 +13,7 @@ from torch.utils.data import Dataset
 from torchvision.transforms import Compose, Grayscale, Resize, CenterCrop, ToTensor
 from torchvision import transforms
 from typing import List, Union
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 
 
@@ -23,21 +24,31 @@ class MimicIVCXR(Dataset):
     ----------
     data_root: str
         Path to the csv file containing all paths of the image dataset.
+    tokenizer - tokenize text
+    max_length - maximum length of the text input
     transform: callable
         Torch transform applied to images.
     """
 
     def __init__(self,
                  data_root: str,
-                 transform: Optional[Callable[[Image.Image], torch.Tensor]] = None
-                 ) -> None:
+                 tokenizer: str,
+                 max_length: int,
+                 transform: Optional[Callable[[Image.Image], torch.Tensor]] = None,
+                ) -> None:
         
         """Initialize the dataset."""
         self.transform = transform or Compose([Resize(224),
                                                CenterCrop(224),
                                                ToTensor()])
+        self.tokenizer = eval(tokenizer)
+        self.max_length = max_length
+
         # load the csv file
         df = pd.read_csv(data_root)
+        
+        df = df[:43]
+        df = df[df["gender"]!= ""]
 
         # extracts all the radiograph path from the dataset
         self.images_paths = df["radiograph_path"].tolist()
@@ -67,10 +78,18 @@ class MimicIVCXR(Dataset):
         with open(text_path, 'r') as file:
             text = file.read()
 
-        label = self.labels[idx]
+
+        if self.tokenizer:
+            tokenized_text = self.tokenizer(text, max_length=self.max_length, padding="max_length", truncation=True, return_tensors="pt")
+            input_ids = tokenized_text['input_ids']
+            attention_mask = tokenized_text['attention_mask']
+            text = {'input_ids': input_ids, 'attention_mask': attention_mask}
+
+
+        label = torch.tensor(1 if self.labels[idx] == "Male" else 0, dtype=torch.long)  # Example conversion assuming "Male" is encoded as 1, "Female" as 0
 
         # return the index, tensor (image), the radiology report and the label (gender)
-        return [idx, image, text, label]
+        return [image, text, label]
 
     def __len__(self) -> int:
         """Return the length of the dataset."""
