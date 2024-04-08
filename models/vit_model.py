@@ -16,7 +16,7 @@ from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
 
 class config:
-    seed = 23
+    seed = 44
     train_batch_size = 10
     valid_batch_size = 10
     test_batch_size = 10
