@@ -32,8 +32,8 @@ class MimicIVCXR(Dataset):
 
     def __init__(self,
                  data_root: str,
-                 tokenizer: str,
                  max_length: int,
+                 tokenizer: Optional[str] = None,
                  transform: Optional[Callable[[Image.Image], torch.Tensor]] = None,
                 ) -> None:
         
@@ -41,13 +41,22 @@ class MimicIVCXR(Dataset):
         self.transform = transform or Compose([Resize(224),
                                                CenterCrop(224),
                                                ToTensor()])
-        self.tokenizer = eval(tokenizer)
+
+
+        if tokenizer is not None:
+            self.tokenizer = eval(tokenizer)
+        else:
+            self.tokenizer = None
+
         self.max_length = max_length
 
         # load the csv file
         df = pd.read_csv(data_root)
         
-        df = df[:43]
+        # For testing only!!
+        df = df[:33]
+
+        # Removing all the rows where gender is null
         df = df[df["gender"]!= ""]
 
         # extracts all the radiograph path from the dataset
@@ -62,7 +71,7 @@ class MimicIVCXR(Dataset):
 
     def __getitem__(self, idx: int) -> Union[int, torch.Tensor, str,str]:
         """Return the image at the specified index."""
-
+        
         image_path = "data/" + self.images_paths[idx]
         text_path = "data/" + self.text_paths[idx]
 
