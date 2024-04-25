@@ -1,16 +1,18 @@
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+relative_path  = '../mimic-data'
+DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), relative_path))
 
 # To do: Change the path based on your directory where data is stored
 
 # Loaded all the csv files
-radiograph_data = pd.read_csv("data/cxr-record-list.csv")
-radio_report_data = pd.read_csv("data/cxr-study-list.csv")
-admissions_data = pd.read_csv("data/admissions.csv")
-patients_data = pd.read_csv("data/patients.csv")
+radiograph_data = pd.read_csv(f"{DATA_DIR}/cxr-record-list.csv")
+radio_report_data = pd.read_csv(f"{DATA_DIR}/cxr-study-list.csv")
+admissions_data = pd.read_csv(f"{DATA_DIR}/admissions.csv")
+patients_data = pd.read_csv(f"{DATA_DIR}/patients.csv")
 # label_mimic_data = pd.read_csv("data/mimic_chexpert.csv")
 
 # Filtered and cleaned up admissions data
@@ -59,14 +61,14 @@ def replace_extension(file_path):
 
 data_loader_final['radiograph_path'] = data_loader_final['radiograph_path'].apply(replace_extension)
 
-data_loader_final.to_csv("graph_report.csv")
+data_loader_final.to_csv(f"{DATA_DIR}/graph_report.csv")
 # print(data_loader_final.head(20))
 
 
 # Extracted the whole data and removed 2 columns 
 columns_to_remove = ['anchor_year', 'anchor_year_group']
 final = final_data.drop(columns=columns_to_remove)
-final.to_csv("final.csv")
+final.to_csv(f"{DATA_DIR}/final.csv")
 
 # To view the final data
 print(final.head(20))
