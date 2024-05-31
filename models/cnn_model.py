@@ -1,13 +1,12 @@
 from tqdm import tqdm
-import numpy as np
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
-from torch.nn import Conv2d, Linear, ReLU, MaxPool2d, Dropout, BatchNorm2d
-import sys
-from lib.utils import seed_everything
+
+from sklearn.model_selection import train_test_split
+
 from data_modules.mimic_cxr import MimicIVCXR
 
 class config:

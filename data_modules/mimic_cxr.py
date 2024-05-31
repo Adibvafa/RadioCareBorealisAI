@@ -1,19 +1,11 @@
-import os
-import logging
-import math
-from typing import Optional, Callable
-import json
+from typing import Optional, Callable, Union
+
 import torch
-import pydicom
-import pandas as pd
-import torch.nn as nn
-import torchaudio
-from PIL import Image
 from torch.utils.data import Dataset
-from torchvision.transforms import Compose, Grayscale, Resize, CenterCrop, ToTensor
-from torchvision import transforms
-from typing import List, Union
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, ViTImageProcessor
+from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor
+
+import pandas as pd
+from PIL import Image
 
 
 class MimicIVCXR(Dataset):
@@ -30,23 +22,28 @@ class MimicIVCXR(Dataset):
 
     def __init__(self,
                  data_root: str,
-                 graph_report_dir: str,
-                 tokenizer: str,
                  max_length: int,
+                 tokenizer: Optional[str] = None,
                  transform: Optional[Callable[[Image.Image], torch.Tensor]] = None,
                 ) -> None:
         
         """Initialize the dataset."""
-        self.data_root = data_root
         self.transform = transform or Compose([Resize(224),
                                                CenterCrop(224),
                                                ToTensor()])
-        self.tokenizer = eval(tokenizer)
+
+
+        if tokenizer is not None:
+            self.tokenizer = eval(tokenizer)
+        else:
+            self.tokenizer = None
+
         self.max_length = max_length
 
         # load the csv file
-        df = pd.read_csv(graph_report_dir)
-        
+        df = pd.read_csv(data_root)
+
+        # Removing all the rows where gender is null
         df = df[df["gender"]!= ""]
 
         # extracts all the radiograph path from the dataset
@@ -61,9 +58,9 @@ class MimicIVCXR(Dataset):
 
     def __getitem__(self, idx: int) -> Union[int, torch.Tensor, str,str]:
         """Return the image at the specified index."""
-
-        image_path = self.data_root + self.images_paths[idx]
-        text_path = None # self.data_root + self.text_paths[idx]
+        
+        image_path = "data/" + self.images_paths[idx]
+        text_path = "data/" + self.text_paths[idx]
 
         # Load image
         # Load the JPEG image
@@ -71,25 +68,24 @@ class MimicIVCXR(Dataset):
 
         # Convert the image to RGB format
         rgb_image = jpeg_image.convert('RGB')
-
-        # Preprocess the image
-        image = self.transform(images=rgb_image, return_tensors="pt")['pixel_values'].squeeze()
+        image = self.transform(rgb_image)
 
         # Load text
-        # with open(text_path, 'r') as file:
-        #     text = file.read()
+        with open(text_path, 'r') as file:
+            text = file.read()
 
-        # if self.tokenizer:
-        #     tokenized_text = self.tokenizer(text, max_length=self.max_length, padding="max_length", truncation=True, return_tensors="pt")
-        #     input_ids = tokenized_text['input_ids']
-        #     attention_mask = tokenized_text['attention_mask']
-        #     text = {'input_ids': input_ids, 'attention_mask': attention_mask}
 
-        label = torch.tensor(1 if self.labels[idx] == "Male"
-                             else 0, dtype=torch.long)  # Example conversion assuming "Male" is encoded as 1, "Female" as 0
+        if self.tokenizer:
+            tokenized_text = self.tokenizer(text, max_length=self.max_length, padding="max_length", truncation=True, return_tensors="pt")
+            input_ids = tokenized_text['input_ids']
+            attention_mask = tokenized_text['attention_mask']
+            text = {'input_ids': input_ids, 'attention_mask': attention_mask}
+
+
+        label = torch.tensor(1 if self.labels[idx] == "Male" else 0, dtype=torch.long)  # Example conversion assuming "Male" is encoded as 1, "Female" as 0
 
         # return the index, tensor (image), the radiology report and the label (gender)
-        return [image, label, label]
+        return [image, text, label]
 
     def __len__(self) -> int:
         """Return the length of the dataset."""
@@ -97,17 +93,9 @@ class MimicIVCXR(Dataset):
 
 
 def main() -> None:
-    DATA_DIR  = 'mimic-data/'
-    ROOT = os.path.dirname(os.getcwd())
-    os.chdir(f'E:/RadioCareBorealisAI')
-
-    dataset = MimicIVCXR(data_root=DATA_DIR, 
-    graph_report_dir=f"{DATA_DIR}/graph_report.csv", 
-    tokenizer="AutoTokenizer.from_pretrained('bert-base-uncased')", 
-    max_length=3000, 
-    transform=ViTImageProcessor.from_pretrained('google/vit-base-patch16-224-in21k')
-    )
-    print(dataset.__getitem__(20000))
+    data_root = "data/graph_report.csv"
+    dataset = MimicIVCXR(data_root,None)
+    print(dataset.__getitem__(1772))
 
 if __name__ == "__main__":
     main()

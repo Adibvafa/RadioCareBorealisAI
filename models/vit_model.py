@@ -1,19 +1,13 @@
-import os
-import numpy as np
-import matplotlib.pyplot as plt
-from pathlib import Path
-from PIL import Image
-from tqdm import tqdm
-import tensorflow as tf
 import torch
-from transformers import ViTFeatureExtractor, TFAutoModelForImageClassification
-from sklearn.model_selection import train_test_split
-from transformers import ViTForImageClassification, ViTConfig, ViTImageProcessor
-from data_modules.mimic_cxr import MimicIVCXR
 import torch.optim as optim
 import torch.nn as nn
-from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
+
+from sklearn.model_selection import train_test_split
+from transformers import ViTForImageClassification, ViTConfig
+
+from data_modules.mimic_cxr import MimicIVCXR
+
 
 class config:
     seed = 44
