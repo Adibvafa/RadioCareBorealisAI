@@ -18,4 +18,4 @@ export CUBLAS_WORKSPACE_CONFIG=:4096:2
 export NCCL_DEBUG=INFO
 export PYTHONFAULTHANDLER=1
 
-stdbuf -oL -eL srun python3 models/blip_finetune.py
+stdbuf -oL -eL srun python3 models/blip/blip_finetune.py
