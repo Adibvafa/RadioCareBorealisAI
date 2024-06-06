@@ -59,10 +59,10 @@ The repository is organized as follows:
 If you use this work in your research, please cite:
 
 ```
-@article{radiocare2024,
+@misc{radiocare2024,
   title={RadioCare: Fighting Inefficiencies in Medical Imaging},
   author={Fallahpour, Adibvafa and Srivastava, Archita and Dhillon, Mantaj and Liu, Grace},
-  journal={Proceedings of Borealis AI's "Let's SOLVE It" Program},
-  year={2024}
+  year={2024},
+  howpublished={\url{https://github.com/Adibvafa/RadioCareBorealisAI}},
 }
 ```
