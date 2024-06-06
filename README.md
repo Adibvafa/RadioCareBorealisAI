@@ -1,4 +1,6 @@
-# RadioCare: Fighting Inefficiencies in Medical Imaging
+# RadioCare
+![image](https://github.com/Adibvafa/RadioCareBorealisAI/assets/90617686/ec861f94-db64-42c0-b692-d5f2ba5fe737)
+<br><br>
 
 ## Introduction
 Radiocare aims to develop a cutting-edge image-to-text model that generates accurate radiology reports and diagnoses for chest X-ray images. By leveraging the BLIP and Vision Transformer architectures, Radiocare seeks to streamline the diagnostic process, enabling faster and more accurate identification of health issues. This project addresses the critical need for timely and precise radiological assessments, especially in rural areas with limited access to healthcare. Ultimately, Radiocare strives to improve patient outcomes and bridge the gap in healthcare accessibility across Canada.
@@ -11,9 +13,10 @@ Radiocare utilizes data from the MIMIC-CXR database on PhysioNet, consisting of 
 <br>
 ### Model Architecture
 Radiocare employs the BLIP (Bootstrapped Language-Image Pre-training) model, which integrates the Vision Transformer (ViT) architecture with a text decoder. ViT processes images by dividing them into fixed-size patches, transforming these patches into high-dimensional vectors, and then embedding them into tokens. The self-attention mechanism in ViT captures global dependencies across patches, enhancing the model's understanding of the entire image. The text decoder translates these visual features into coherent radiology reports, enabling detailed and accurate diagnostics.
-<br>
-### CNN vs. ViT
-ViT is preferred over traditional Convolutional Nerual Networks (CNNs) for its superior ability to capture long-range dependencies and contextual relationships within images. The self-attention mechanism in ViT allows for a comprehensive understanding of complex patterns, crucial for accurately diagnosing medical conditions from chest X-rays.
+<br><br>
+
+## Demo
+http://drive.google.com/file/d/1ckUJJ8Owzj-setufepXONia3VUDQ2eFP/view
 <br><br>
 
 ## Results
@@ -52,10 +55,6 @@ The repository is organized as follows:
 - **slurm/**: SLURM batch scripts for running jobs on a computing cluster.
 <br><br>
 
-## Demo
-
-
-<br><br>
 ## Citation
 
 If you use this work in your research, please cite:
