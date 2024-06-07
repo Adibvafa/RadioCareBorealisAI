@@ -17,9 +17,8 @@ Radiocare employs the BLIP (Bootstrapped Language-Image Pre-training) model, whi
 
 ## Demo
 ![](radiocare_loop.gif)
-
-
 <br><br>
+
 ## Results
 Radiocare's model can assess a chest X-ray in approximately 3 seconds, providing doctors with a 99% faster diagnostic process. Key performance metrics include:
 
