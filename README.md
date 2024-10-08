@@ -60,10 +60,12 @@ The repository is organized as follows:
 If you use this work in your research, please cite:
 
 ```
-@misc{radiocare2024,
-  title={RadioCare: Fighting Inefficiencies in Medical Imaging},
-  author={Fallahpour, Adibvafa and Srivastava, Archita and Dhillon, Mantaj and Liu, Grace},
-  year={2024},
-  howpublished={\url{https://github.com/Adibvafa/RadioCareBorealisAI}},
+@misc {adibvafa_fallahpour_2024,
+	author       = { Fallahpour, Adibvafa and Srivastava, Archita and Dhillon, Mantaj and Liu, Grace },
+	title        = { BLIP-MIMIC-CXR },
+	year         = 2024,
+	url          = { https://huggingface.co/adibvafa/BLIP-MIMIC-CXR },
+	doi          = { 10.57967/hf/3207 },
+	publisher    = { Hugging Face }
 }
 ```
